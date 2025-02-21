@@ -19,10 +19,28 @@ function renderTodos() {
   activeTodos.innerHTML = "";
   completedTodos.innerHTML = "";
 
+  // Get the active tab
+  const activeTab = document.querySelector(".nav-link.active").id;
+
+  // Filter todos based on the active tab
+  let filteredTodos = [];
+  if (activeTab === "ex1-tab-1") {
+    // All tab
+    filteredTodos = todos;
+  } else if (activeTab === "ex1-tab-2") {
+    // Active tab
+    filteredTodos = todos.filter((todo) => !todo.completed);
+  } else if (activeTab === "ex1-tab-3") {
+    // Completed tab
+    filteredTodos = todos.filter((todo) => todo.completed);
+  }
+
+  // Paginate the filtered todos
   const start = (currentPage - 1) * todosPerPage;
   const end = start + todosPerPage;
-  const paginatedTodos = todos.slice(start, end);
+  const paginatedTodos = filteredTodos.slice(start, end);
 
+  // Render todos
   paginatedTodos.forEach((todo) => {
     const todoItem = document.createElement("li");
     todoItem.className = `list-group-item d-flex align-items-center border-0 mb-2 rounded ${
@@ -40,19 +58,27 @@ function renderTodos() {
         todo.id
       })">Update</button>
     `;
-    todoList.appendChild(todoItem);
 
+    // Add to "All" tab
+    todoList.appendChild(todoItem.cloneNode(true));
+
+    // Add to "Active" or "Completed" tab based on checkbox state
     if (!todo.completed) {
       activeTodos.appendChild(todoItem.cloneNode(true));
     } else {
       completedTodos.appendChild(todoItem.cloneNode(true));
     }
   });
+
+  // Update pagination buttons
+  updatePaginationButtons(filteredTodos.length);
 }
 
 // Create Todo
 async function createTodo() {
   const title = document.getElementById("new-title").value;
+  if (!title) return; // Prevent empty todos
+
   const response = await fetch("https://jsonplaceholder.typicode.com/todos", {
     method: "POST",
     body: JSON.stringify({ title, completed: false }),
@@ -97,6 +123,8 @@ function showUpdateModal(todoId) {
 // Save Update
 document.getElementById("save-update").addEventListener("click", async () => {
   const newTitle = document.getElementById("update-title").value;
+  if (!newTitle) return; // Prevent empty updates
+
   const todo = todos.find((t) => t.id === updatingTodoId);
   todo.title = newTitle;
   await fetch(`https://jsonplaceholder.typicode.com/todos/${updatingTodoId}`, {
@@ -126,6 +154,31 @@ document.getElementById("prev-page").addEventListener("click", () => {
     currentPage--;
     renderTodos();
   }
+});
+
+// Update Pagination Buttons
+function updatePaginationButtons(totalTodos) {
+  const prevButton = document.getElementById("prev-page");
+  const nextButton = document.getElementById("next-page");
+
+  prevButton.disabled = currentPage === 1;
+  nextButton.disabled = currentPage * todosPerPage >= totalTodos;
+}
+
+// Tab Switching
+document.querySelectorAll(".nav-link").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    // Remove active class from all tabs
+    document
+      .querySelectorAll(".nav-link")
+      .forEach((t) => t.classList.remove("active"));
+    // Add active class to the clicked tab
+    tab.classList.add("active");
+    // Reset pagination to the first page
+    currentPage = 1;
+    // Render todos based on the selected tab
+    renderTodos();
+  });
 });
 
 // Initialize
