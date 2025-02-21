@@ -3,7 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Todo List with API</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <h1>Todo List</h1>
+    <div id="todo-list"></div>
+    <button id="prev-page">Previous</button>
+    <button id="next-page">Next</button>
+    <a href="create-todo.html"><button>Create New Todo</button></a>
+
+    <!-- Modal for Update -->
+    <div id="update-modal" class="modal">
+      <input type="text" id="update-title" placeholder="New Title" />
+      <button id="save-update">Save</button>
+      <button id="cancel-update">Cancel</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
