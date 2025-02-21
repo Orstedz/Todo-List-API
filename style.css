@@ -112,10 +112,9 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.list-group-item.done {
+.done {
   text-decoration: line-through;
   opacity: 0.7;
-  background-color: #f8f9fa;
 }
 
 /* Checkbox Styling */
