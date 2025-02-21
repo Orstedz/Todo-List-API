@@ -43,14 +43,13 @@ function renderTodos() {
   // Render todos
   paginatedTodos.forEach((todo) => {
     const todoItem = document.createElement("li");
-    todoItem.className = `list-group-item d-flex align-items-center border-0 mb-2 rounded ${
-      todo.completed ? "done" : ""
-    }`;
+    todoItem.className = `list-group-item d-flex align-items-center border-0 mb-2 rounded`;
+
     todoItem.innerHTML = `
       <input class="form-check-input me-2" type="checkbox" ${
         todo.completed ? "checked" : ""
       } onchange="markAsDone(${todo.id})" />
-      <span>${todo.title}</span>
+      <span class="${todo.completed ? "done" : ""}">${todo.title}</span>
       <button class="btn btn-sm btn-danger ms-auto" onclick="deleteTodo(${
         todo.id
       })">Delete</button>
