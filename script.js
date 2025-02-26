@@ -132,6 +132,7 @@ document.getElementById("save-update").addEventListener("click", async () => {
     headers: { "Content-Type": "application/json" },
   });
   document.getElementById("update-modal").style.display = "none";
+  saveTodos();
   renderTodos();
 });
 
