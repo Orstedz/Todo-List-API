@@ -180,5 +180,58 @@ document.querySelectorAll(".nav-link").forEach((tab) => {
   });
 });
 
+// Save Todos to Local Storage
+function saveTodos() {
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+// Load Todos from Local Storage
+function loadTodos() {
+  const storedTodos = localStorage.getItem("todos");
+  if (storedTodos) {
+    todos = JSON.parse(storedTodos);
+  }
+}
+
+// Modify fetchTodos to load from localStorage first
+async function fetchTodos() {
+  loadTodos();
+  if (todos.length === 0) {
+    const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+    todos = await response.json();
+    saveTodos();
+  }
+  renderTodos();
+}
+
+// Update createTodo, markAsDone, and deleteTodo to save todos
+async function createTodo() {
+  const title = document.getElementById("new-title").value;
+  if (!title) return;
+
+  const newTodo = {
+    id: Date.now(), // Use a unique ID
+    title,
+    completed: false,
+  };
+  todos.unshift(newTodo);
+  saveTodos();
+  renderTodos();
+  document.getElementById("new-title").value = "";
+}
+
+async function markAsDone(todoId) {
+  const todo = todos.find((t) => t.id === todoId);
+  todo.completed = !todo.completed;
+  saveTodos();
+  renderTodos();
+}
+
+async function deleteTodo(todoId) {
+  todos = todos.filter((t) => t.id !== todoId);
+  saveTodos();
+  renderTodos();
+}
+
 // Initialize
 fetchTodos();
