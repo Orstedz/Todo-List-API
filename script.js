@@ -3,14 +3,12 @@ let currentPage = 1;
 const todosPerPage = 10;
 let updatingTodoId = null;
 
-// Fetch Todos from API
 async function fetchTodos() {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
   todos = await response.json();
   renderTodos();
 }
 
-// Render Todos
 function renderTodos() {
   const todoList = document.getElementById("todo-list");
   const activeTodos = document.getElementById("active-todos");
@@ -19,23 +17,17 @@ function renderTodos() {
   activeTodos.innerHTML = "";
   completedTodos.innerHTML = "";
 
-  // Get the active tab
   const activeTab = document.querySelector(".nav-link.active").id;
 
-  // Filter todos based on the active tab
   let filteredTodos = [];
   if (activeTab === "ex1-tab-1") {
-    // All tab
     filteredTodos = todos;
   } else if (activeTab === "ex1-tab-2") {
-    // Active tab
     filteredTodos = todos.filter((todo) => !todo.completed);
   } else if (activeTab === "ex1-tab-3") {
-    // Completed tab
     filteredTodos = todos.filter((todo) => todo.completed);
   }
 
-  // Paginate the filtered todos
   const start = (currentPage - 1) * todosPerPage;
   const end = start + todosPerPage;
   const paginatedTodos = filteredTodos.slice(start, end);
@@ -58,10 +50,8 @@ function renderTodos() {
       })">Update</button>
     `;
 
-    // Add to "All" tab
     todoList.appendChild(todoItem.cloneNode(true));
 
-    // Add to "Active" or "Completed" tab based on checkbox state
     if (!todo.completed) {
       activeTodos.appendChild(todoItem.cloneNode(true));
     } else {
@@ -69,7 +59,6 @@ function renderTodos() {
     }
   });
 
-  // Update pagination buttons
   updatePaginationButtons(filteredTodos.length);
 }
 
@@ -168,15 +157,11 @@ function updatePaginationButtons(totalTodos) {
 // Tab Switching
 document.querySelectorAll(".nav-link").forEach((tab) => {
   tab.addEventListener("click", () => {
-    // Remove active class from all tabs
     document
       .querySelectorAll(".nav-link")
       .forEach((t) => t.classList.remove("active"));
-    // Add active class to the clicked tab
     tab.classList.add("active");
-    // Reset pagination to the first page
     currentPage = 1;
-    // Render todos based on the selected tab
     renderTodos();
   });
 });
